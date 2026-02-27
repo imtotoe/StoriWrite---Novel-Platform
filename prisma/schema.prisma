@@ -1,0 +1,316 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────
+// ENUMS
+// ─────────────────────────────────────────
+
+enum Role {
+  READER
+  WRITER
+  ADMIN
+}
+
+enum NovelStatus {
+  DRAFT
+  ONGOING
+  COMPLETED
+  HIATUS
+}
+
+enum NotificationType {
+  NEW_CHAPTER
+  NEW_COMMENT
+  NEW_FOLLOWER
+  NEW_VOTE
+}
+
+enum ReportStatus {
+  PENDING
+  REVIEWED
+  RESOLVED
+}
+
+enum ReportReason {
+  INAPPROPRIATE_CONTENT
+  SPAM
+  COPYRIGHT
+  OTHER
+}
+
+// ─────────────────────────────────────────
+// USER
+// ─────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  username      String    @unique
+  displayName   String?
+  passwordHash  String?
+  avatar        String?
+  bio           String?   @db.Text
+  role          Role      @default(READER)
+  isVerified    Boolean   @default(false)
+  isBanned      Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  novels        Novel[]
+  bookmarks     Bookmark[]
+  comments      Comment[]
+  readHistory   ReadHistory[]
+  following     Follow[]       @relation("Follower")
+  followers     Follow[]       @relation("Following")
+  votes         Vote[]
+  notifications Notification[]
+  reports       Report[]       @relation("Reporter")
+  reportedItems Report[]       @relation("ReportedUser")
+
+  @@index([username])
+  @@index([email])
+}
+
+// NextAuth required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ─────────────────────────────────────────
+// NOVEL
+// ─────────────────────────────────────────
+
+model Novel {
+  id          String      @id @default(cuid())
+  title       String
+  slug        String      @unique
+  synopsis    String      @db.Text
+  cover       String?
+  status      NovelStatus @default(DRAFT)
+  language    String      @default("th")
+  views       Int         @default(0)
+  isPublished Boolean     @default(false)
+  isFeatured  Boolean     @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  authorId    String
+  author      User          @relation(fields: [authorId], references: [id])
+  chapters    Chapter[]
+  genres      GenreOnNovel[]
+  tags        TagOnNovel[]
+  bookmarks   Bookmark[]
+  votes       Vote[]
+  reports     Report[]      @relation("ReportedNovel")
+
+  @@index([slug])
+  @@index([authorId])
+  @@index([status, isPublished])
+  @@index([views])
+}
+
+model Chapter {
+  id            String    @id @default(cuid())
+  title         String
+  content       Json
+  contentText   String?   @db.Text
+  chapterNumber Int
+  wordCount     Int       @default(0)
+  isPublished   Boolean   @default(false)
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  novelId       String
+  novel         Novel       @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  comments      Comment[]
+  readHistory   ReadHistory[]
+
+  @@unique([novelId, chapterNumber])
+  @@index([novelId, isPublished])
+}
+
+// ─────────────────────────────────────────
+// TAXONOMY
+// ─────────────────────────────────────────
+
+model Genre {
+  id      String         @id @default(cuid())
+  name    String         @unique
+  slug    String         @unique
+  icon    String?
+  novels  GenreOnNovel[]
+}
+
+model Tag {
+  id      String       @id @default(cuid())
+  name    String       @unique
+  slug    String       @unique
+  novels  TagOnNovel[]
+}
+
+model GenreOnNovel {
+  novelId  String
+  genreId  String
+  novel    Novel  @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  genre    Genre  @relation(fields: [genreId], references: [id])
+
+  @@id([novelId, genreId])
+}
+
+model TagOnNovel {
+  novelId  String
+  tagId    String
+  novel    Novel  @relation(fields: [novelId], references: [id], onDelete: Cascade)
+  tag      Tag    @relation(fields: [tagId], references: [id])
+
+  @@id([novelId, tagId])
+}
+
+// ─────────────────────────────────────────
+// READER ACTIVITY
+// ─────────────────────────────────────────
+
+model Bookmark {
+  userId    String
+  novelId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  novel     Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, novelId])
+  @@index([userId])
+}
+
+model Vote {
+  userId    String
+  novelId   String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  novel     Novel    @relation(fields: [novelId], references: [id], onDelete: Cascade)
+
+  @@id([userId, novelId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String   @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  isHidden  Boolean  @default(false)
+
+  userId    String
+  chapterId String
+  parentId  String?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter   Chapter   @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id])
+  replies   Comment[] @relation("CommentReplies")
+  reports   Report[]  @relation("ReportedComment")
+
+  @@index([chapterId])
+  @@index([userId])
+}
+
+model ReadHistory {
+  userId      String
+  chapterId   String
+  progress    Int      @default(0)
+  lastReadAt  DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  chapter     Chapter  @relation(fields: [chapterId], references: [id], onDelete: Cascade)
+
+  @@id([userId, chapterId])
+  @@index([userId, lastReadAt])
+}
+
+model Follow {
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+  follower    User     @relation("Follower",  fields: [followerId],  references: [id], onDelete: Cascade)
+  following   User     @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@id([followerId, followingId])
+  @@index([followingId])
+}
+
+// ─────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────
+
+model Notification {
+  id        String           @id @default(cuid())
+  type      NotificationType
+  message   String
+  link      String?
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead])
+}
+
+// ─────────────────────────────────────────
+// MODERATION
+// ─────────────────────────────────────────
+
+model Report {
+  id           String       @id @default(cuid())
+  reason       ReportReason
+  description  String?      @db.Text
+  status       ReportStatus @default(PENDING)
+  createdAt    DateTime     @default(now())
+  resolvedAt   DateTime?
+
+  reporterId        String
+  reporter          User     @relation("Reporter",       fields: [reporterId],   references: [id])
+  reportedUserId    String?
+  reportedUser      User?    @relation("ReportedUser",   fields: [reportedUserId], references: [id])
+  reportedNovelId   String?
+  reportedNovel     Novel?   @relation("ReportedNovel",  fields: [reportedNovelId], references: [id])
+  reportedCommentId String?
+  reportedComment   Comment? @relation("ReportedComment", fields: [reportedCommentId], references: [id])
+
+  @@index([status])
+}
