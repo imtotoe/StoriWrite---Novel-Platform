@@ -50,7 +50,7 @@ export async function POST(
     );
   }
 
-  const { title, content, chapterNumber, isDraft } = validated.data;
+  const { title, content, chapterNumber, isDraft, coinPrice } = validated.data;
 
   // Extract plain text for search and word count
   const contentText = extractText(content);
@@ -66,6 +66,7 @@ export async function POST(
       isPublished: !isDraft,
       publishedAt: !isDraft ? new Date() : null,
       novelId: id,
+      coinPrice: coinPrice && coinPrice > 0 ? coinPrice : null,
     },
   });
 

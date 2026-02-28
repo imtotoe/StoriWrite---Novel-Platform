@@ -15,6 +15,8 @@ import {
   Clock,
   ChevronRight,
   BookMarked,
+  Lock,
+  Coins,
 } from "lucide-react";
 import { BookmarkButton } from "@/components/community/BookmarkButton";
 import { VoteButton } from "@/components/community/VoteButton";
@@ -52,6 +54,7 @@ async function getNovel(slug: string) {
           chapterNumber: true,
           wordCount: true,
           publishedAt: true,
+          coinPrice: true,
         },
       },
     },
@@ -251,6 +254,12 @@ export default async function NovelDetailPage({ params }: NovelPageProps) {
                     ตอนที่ {chapter.chapterNumber}
                   </span>
                   <span className="truncate">{chapter.title}</span>
+                  {chapter.coinPrice && chapter.coinPrice > 0 && (
+                    <span className="inline-flex items-center gap-0.5 shrink-0 rounded-full bg-amber-500/10 px-2 py-0.5 text-xs text-amber-600 dark:text-amber-400">
+                      <Coins className="h-3 w-3" />
+                      {chapter.coinPrice}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center gap-3 shrink-0 text-xs text-muted-foreground">
                   <span>{chapter.wordCount.toLocaleString()} คำ · ~{Math.max(1, Math.ceil(chapter.wordCount / 250))} นาที</span>

@@ -3,6 +3,11 @@ import { getCoinPacks } from "@/modules/coin/coin.service";
 
 // GET — list active coin packs
 export async function GET() {
-  const packs = await getCoinPacks();
-  return NextResponse.json({ packs });
+  try {
+    const packs = await getCoinPacks();
+    return NextResponse.json({ packs });
+  } catch (err) {
+    console.error("Failed to fetch coin packs:", err);
+    return NextResponse.json({ error: "Failed to fetch coin packs" }, { status: 500 });
+  }
 }

@@ -13,6 +13,8 @@ export interface CreateChargeRequest {
   coinPackId: string;
   paymentMethod: "promptpay" | "credit_card" | "truemoney";
   returnUri?: string;
+  token?: string;          // Omise card token (for credit_card)
+  phoneNumber?: string;    // phone number (for truemoney)
 }
 
 export interface CreateChargeResponse {

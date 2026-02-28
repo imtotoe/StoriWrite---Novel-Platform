@@ -13,13 +13,19 @@ export async function POST() {
 
   await seedBadges();
 
-  // Seed coin packs
+  // Seed coin packs — use findFirst + create to avoid broken upsert on auto-generated IDs
   for (const pack of DEFAULT_COIN_PACKS) {
-    await prisma.coinPack.upsert({
-      where: { id: pack.name.toLowerCase() },
-      update: pack,
-      create: pack,
+    const existing = await prisma.coinPack.findFirst({
+      where: { name: pack.name },
     });
+    if (existing) {
+      await prisma.coinPack.update({
+        where: { id: existing.id },
+        data: pack,
+      });
+    } else {
+      await prisma.coinPack.create({ data: pack });
+    }
   }
 
   const badgeCount = await prisma.badge.count();

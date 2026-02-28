@@ -57,10 +57,14 @@ export async function PATCH(
   const body = await request.json();
 
   // Whitelist allowed fields to prevent mass assignment
-  const { title, content, chapterNumber } = body;
+  const { title, content, chapterNumber, coinPrice } = body;
   const data: Record<string, unknown> = {};
   if (title !== undefined) data.title = title;
   if (chapterNumber !== undefined) data.chapterNumber = chapterNumber;
+  if (coinPrice !== undefined) {
+    const price = parseInt(coinPrice);
+    data.coinPrice = !isNaN(price) && price > 0 && price <= 100 ? price : null;
+  }
   if (content !== undefined) {
     data.content = content;
     data.contentText = extractText(content);

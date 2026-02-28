@@ -13,10 +13,13 @@ export function verifyOmiseSignature(
     .createHmac("sha256", secret)
     .update(payload)
     .digest("hex");
-  return crypto.timingSafeEqual(
-    Buffer.from(signature),
-    Buffer.from(expectedSignature)
-  );
+
+  // timingSafeEqual requires equal-length buffers
+  const sigBuf = Buffer.from(signature);
+  const expectedBuf = Buffer.from(expectedSignature);
+  if (sigBuf.length !== expectedBuf.length) return false;
+
+  return crypto.timingSafeEqual(sigBuf, expectedBuf);
 }
 
 /**

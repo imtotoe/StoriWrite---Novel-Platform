@@ -31,6 +31,7 @@ export const chapterSchema = z.object({
   content: z.object({}).passthrough(),
   chapterNumber: z.number().int().positive(),
   isDraft: z.boolean().default(true),
+  coinPrice: z.number().int().min(0, "ราคาต้องไม่ต่ำกว่า 0").max(100, "ราคาสูงสุด 100 Coin").optional().default(0),
 });
 
 export const commentSchema = z.object({

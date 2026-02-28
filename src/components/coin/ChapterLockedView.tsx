@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Lock, Coins, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChapterUnlockButton } from "./ChapterUnlockButton";
@@ -26,6 +27,8 @@ export function ChapterLockedView({
     userBalance,
     isLoggedIn,
 }: ChapterLockedViewProps) {
+    const router = useRouter();
+
     return (
         <div className="flex min-h-[60vh] flex-col items-center justify-center px-4 text-center">
             {/* Lock icon */}
@@ -55,7 +58,7 @@ export function ChapterLockedView({
                         chapterTitle={`ตอนที่ ${chapterNumber}: ${chapterTitle}`}
                         isUnlocked={false}
                         userBalance={userBalance}
-                        onUnlocked={() => window.location.reload()}
+                        onUnlocked={() => router.refresh()}
                     />
                     {userBalance < coinPrice && (
                         <Button variant="link" asChild>

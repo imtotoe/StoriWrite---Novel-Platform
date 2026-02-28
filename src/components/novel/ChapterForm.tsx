@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { TiptapEditor } from "@/components/editor/TiptapEditor";
-import { Loader2, Save, History, RotateCcw, Clock } from "lucide-react";
+import { Loader2, Save, History, RotateCcw, Clock, Coins } from "lucide-react";
 import { toast } from "sonner";
 import type { JSONContent } from "@tiptap/react";
 
@@ -29,6 +29,7 @@ interface ChapterFormProps {
     content: JSONContent;
     chapterNumber: number;
     isPublished: boolean;
+    coinPrice?: number | null;
   };
   nextChapterNumber: number;
 }
@@ -175,6 +176,8 @@ export function ChapterForm({
     const formData = new FormData(e.currentTarget);
     const title = formData.get("title") as string;
     const chapterNumber = parseInt(formData.get("chapterNumber") as string);
+    const coinPriceRaw = formData.get("coinPrice") as string;
+    const coinPrice = coinPriceRaw ? parseInt(coinPriceRaw) : 0;
 
     if (!content || !content.content?.length) {
       toast.error("กรุณาเขียนเนื้อหา");
@@ -191,7 +194,7 @@ export function ChapterForm({
       });
     }
 
-    const data = { title, content, chapterNumber, isDraft };
+    const data = { title, content, chapterNumber, isDraft, coinPrice };
 
     const url = isEditing
       ? `/api/chapters/${chapter.id}`
@@ -335,7 +338,7 @@ export function ChapterForm({
 
       <Card>
         <CardContent className="space-y-4 pt-6">
-          <div className="grid gap-4 sm:grid-cols-[1fr_120px]">
+          <div className="grid gap-4 sm:grid-cols-[1fr_120px_140px]">
             <div className="space-y-2">
               <Label htmlFor="title">ชื่อ Chapter</Label>
               <Input
@@ -357,6 +360,22 @@ export function ChapterForm({
                 defaultValue={chapter?.chapterNumber || nextChapterNumber}
                 required
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="coinPrice" className="flex items-center gap-1">
+                <Coins className="h-3.5 w-3.5 text-amber-500" />
+                ราคา Coin
+              </Label>
+              <Input
+                id="coinPrice"
+                name="coinPrice"
+                type="number"
+                min={0}
+                max={100}
+                defaultValue={chapter?.coinPrice ?? 0}
+                placeholder="0 = ฟรี"
+              />
+              <p className="text-[11px] text-muted-foreground">0 = อ่านฟรี</p>
             </div>
           </div>
         </CardContent>

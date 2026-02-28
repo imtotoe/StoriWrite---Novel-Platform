@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlusCircle, Edit, Eye, EyeOff } from "lucide-react";
+import { PlusCircle, Edit, Eye, EyeOff, Coins } from "lucide-react";
 import { ChapterPublishButton } from "@/components/novel/ChapterPublishButton";
 import { NovelPublishButton } from "@/components/novel/NovelPublishButton";
 
@@ -94,6 +94,12 @@ export default async function ChaptersPage({
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  {chapter.coinPrice && chapter.coinPrice > 0 && (
+                    <Badge variant="outline" className="gap-1 border-amber-500/30 text-amber-600 dark:text-amber-400">
+                      <Coins className="h-3 w-3" />
+                      {chapter.coinPrice}
+                    </Badge>
+                  )}
                   <Badge variant={chapter.isPublished ? "default" : "secondary"}>
                     {chapter.isPublished ? (
                       <><Eye className="mr-1 h-3 w-3" /> เผยแพร่</>

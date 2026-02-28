@@ -156,15 +156,17 @@ export async function unlockChapter(userId: string, chapterId: string) {
     });
 
     // Create writer revenue (70% split)
+    // Calculate approximate THB value based on average coin price (~0.9 THB/coin)
     const writerCoins = Math.floor(price * WRITER_REVENUE_PERCENT / 100);
-    const coinValueTHB = price * 0.9; // approximate value
+    const thbPerCoin = 0.9; // average across all packs
+    const writerThb = writerCoins * thbPerCoin;
 
     await tx.writerRevenue.create({
       data: {
         writerId: chapter.novel.authorId,
         coinSpendId: spend.id,
         coinsEarned: writerCoins,
-        thbAmount: writerCoins * coinValueTHB / price,
+        thbAmount: writerThb,
       },
     });
 

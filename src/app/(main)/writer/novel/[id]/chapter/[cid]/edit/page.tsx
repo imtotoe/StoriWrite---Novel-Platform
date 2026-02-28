@@ -42,6 +42,7 @@ export default async function EditChapterPage({
         content: chapter.content as import("@tiptap/react").JSONContent,
         chapterNumber: chapter.chapterNumber,
         isPublished: chapter.isPublished,
+        coinPrice: chapter.coinPrice,
       }}
       nextChapterNumber={nextChapterNumber}
     />

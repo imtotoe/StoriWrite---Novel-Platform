@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Coins, ArrowUpCircle, ArrowDownCircle, Gift, RotateCcw } from "lucide-react";
+import { Coins, ArrowUpCircle, ArrowDownCircle, Gift, RotateCcw, Settings2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface HistoryItem {
     id: string;
-    type: "PURCHASE" | "SPEND" | "REFUND" | "BONUS";
+    type: "PURCHASE" | "SPEND" | "REFUND" | "BONUS" | "ADMIN_ADJUST";
     amount: number;
     balanceAfter: number;
     description: string;
@@ -18,6 +18,7 @@ const typeConfig: Record<string, { icon: typeof Coins; color: string; label: str
     SPEND: { icon: ArrowDownCircle, color: "text-red-500", label: "ใช้ Coin" },
     REFUND: { icon: RotateCcw, color: "text-blue-500", label: "คืน Coin" },
     BONUS: { icon: Gift, color: "text-purple-500", label: "โบนัส" },
+    ADMIN_ADJUST: { icon: Settings2, color: "text-orange-500", label: "ปรับยอด" },
 };
 
 export function CoinHistoryClient() {
@@ -30,8 +31,8 @@ export function CoinHistoryClient() {
             fetch("/api/coins/history").then((r) => r.json()),
             fetch("/api/coins/balance").then((r) => r.json()),
         ])
-            .then(([history, bal]) => {
-                setItems(history.items ?? history ?? []);
+            .then(([historyRes, bal]) => {
+                setItems(historyRes.history ?? []);
                 setBalance(bal.balance ?? 0);
             })
             .finally(() => setLoading(false));
