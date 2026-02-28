@@ -259,7 +259,7 @@ export default async function HomePage() {
           <BookOpen className="mx-auto h-12 w-12 text-muted-foreground" />
           <h2 className="mt-4 text-xl font-semibold">ยังไม่มีนิยาย</h2>
           <p className="mt-2 text-muted-foreground">
-            เป็นคนแรกที่เขียนนิยายบน NovelSpace!
+            เป็นคนแรกที่เขียนนิยายบน StoriWrite!
           </p>
           <Button className="mt-6" asChild>
             <Link href="/register">เริ่มเขียนนิยาย</Link>

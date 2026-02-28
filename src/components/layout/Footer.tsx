@@ -9,7 +9,7 @@ export function Footer() {
           <div className="col-span-2 sm:col-span-1">
             <Link href="/" className="flex items-center gap-2 font-bold">
               <BookOpen className="h-5 w-5" />
-              NovelSpace
+              StoriWrite
             </Link>
             <p className="mt-2 text-sm text-muted-foreground">
               แพลตฟอร์มอ่านและเขียนนิยายออนไลน์
@@ -44,7 +44,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t pt-4 text-center text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} NovelSpace. สงวนลิขสิทธิ์ทุกประการ
+          &copy; {new Date().getFullYear()} StoriWrite. สงวนลิขสิทธิ์ทุกประการ
         </div>
       </div>
     </footer>

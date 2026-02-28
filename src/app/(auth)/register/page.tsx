@@ -79,7 +79,7 @@ export default function RegisterPage() {
     <Card>
       <CardHeader className="text-center">
         <CardTitle className="text-2xl">สมัครสมาชิก</CardTitle>
-        <CardDescription>สร้างบัญชีเพื่อเริ่มต้นใช้งาน NovelSpace</CardDescription>
+        <CardDescription>สร้างบัญชีเพื่อเริ่มต้นใช้งาน StoriWrite</CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-4">

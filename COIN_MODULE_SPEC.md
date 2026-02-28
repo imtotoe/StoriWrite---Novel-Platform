@@ -1,5 +1,5 @@
 # Coin Module — Complete Technical Specification
-> Novel Platform (NiyayDao) | Version 1.1 | Date: 2026-02-28  
+> Novel Platform (StoriWrite) | Version 1.1 | Date: 2026-02-28  
 > Stack: Next.js 16, TypeScript, Prisma ORM, PostgreSQL (Supabase), Omise (Opn Payments)  
 > Scope: ระบบ Coin ครบวงจร ตั้งแต่ชำระเงินจริง → เพิ่ม Coin → ใช้ Coin → Writer Revenue → Security
 
@@ -892,7 +892,7 @@ export const coinService = {
         coinsToGrant: totalCoins,
         // coinTransactionId จะ set ข้างล่างหลัง create tx record
       },
-      description: `NiyayDao Coins: ${pack.name} (${totalCoins} coins)`,
+      description: `StoriWrite Coins: ${pack.name} (${totalCoins} coins)`,
     }
 
     // PromptPay → create source, Credit Card → use token, TrueMoney → create source
@@ -1444,5 +1444,5 @@ describe("POST /api/webhooks/omise", () => {
 
 ---
 
-*Coin Module Spec v1.1 — NiyayDao Novel Platform*  
+*Coin Module Spec v1.1 — StoriWrite Novel Platform*  
 *Stack: Next.js 16 · TypeScript · Prisma · Supabase · Omise (Opn Payments)*

@@ -1,6 +1,6 @@
-# NovelSpace Admin Panel — Specification
+# StoriWrite Admin Panel — Specification
 
-**Platform:** NovelSpace (อ่านและเขียนนิยายออนไลน์)  
+**Platform:** StoriWrite (อ่านและเขียนนิยายออนไลน์)  
 **Version:** 1.0.0  
 **Stack:** Next.js / TypeScript / Prisma ORM / PostgreSQL  
 **Last Updated:** 2026-02-28
@@ -28,7 +28,7 @@
 
 ## Overview
 
-NovelSpace Admin Panel is a secure, role-based management interface for platform administrators and moderators. It provides full control over users, content, transactions, and system configuration.
+StoriWrite Admin Panel is a secure, role-based management interface for platform administrators and moderators. It provides full control over users, content, transactions, and system configuration.
 
 **Admin Panel Base URL:** `/admin`  
 **Authentication:** Session-based with 2FA required for Admin role  

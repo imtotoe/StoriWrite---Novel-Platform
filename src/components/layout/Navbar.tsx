@@ -114,7 +114,7 @@ export function Navbar() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 font-bold">
           <BookOpen className="h-5 w-5" />
-          <span className="hidden sm:inline">NovelSpace</span>
+          <span className="hidden sm:inline">StoriWrite</span>
         </Link>
 
         {/* Desktop nav */}

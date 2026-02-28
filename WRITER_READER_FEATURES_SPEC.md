@@ -1,5 +1,5 @@
 # Writer & Reader Features Specification
-> Novel Platform (NiyayDao) | Version 1.1 | Date: 2026-02-28  
+> Novel Platform (StoriWrite) | Version 1.1 | Date: 2026-02-28  
 > กลุ่มเป้าหมาย: นักเขียนและนักอ่านชาวไทย  
 > Stack: Next.js 16, TypeScript, Prisma, Supabase, Tiptap
 
@@ -701,13 +701,13 @@ GET    /api/novels/[id]/completion-alert   → ตรวจสถานะ
 
 **Format แจ้งเตือนใน LINE (Flex Message):**
 ```
-📖 [NiyayDao]
+📖 [StoriWrite]
 "ดาวร้าวฟ้า" อัปเดตแล้ว!
 
 ตอนที่ 16: "เมื่อดาวตก"
 โดย: @inkwriter
 
-👉 อ่านได้เลย: niyaydao.com/novel/...
+👉 อ่านได้เลย: storiwrite.com/novel/...
 ```
 
 > **หมายเหตุ:** ใช้ LINE Messaging API + LINE Official Account (ฟรีไม่เกิน 500 messages/เดือน, หลังจากนั้น ~฿0.04/message)
@@ -881,5 +881,5 @@ GET    /api/badges                              → ดึง badge catalog ท�
 
 ---
 
-*Writer & Reader Features Spec — NiyayDao Novel Platform v1.1*  
+*Writer & Reader Features Spec — StoriWrite Novel Platform v1.1*  
 *Stack: Next.js 16 · TypeScript · Prisma · Supabase · LINE Messaging API*

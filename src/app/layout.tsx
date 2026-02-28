@@ -24,8 +24,8 @@ const sarabun = Sarabun({
 
 export const metadata: Metadata = {
   title: {
-    default: "NovelSpace - อ่านและเขียนนิยายออนไลน์",
-    template: "%s | NovelSpace",
+    default: "StoriWrite - อ่านและเขียนนิยายออนไลน์",
+    template: "%s | StoriWrite",
   },
   description:
     "แพลตฟอร์มอ่านและเขียนนิยายออนไลน์สำหรับนักเขียนและนักอ่านภาษาไทย",

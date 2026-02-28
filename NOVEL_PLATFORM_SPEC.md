@@ -92,7 +92,7 @@ SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
 
 # App
 NEXT_PUBLIC_APP_URL="http://localhost:3000"
-NEXT_PUBLIC_APP_NAME="NovelSpace"
+NEXT_PUBLIC_APP_NAME="StoriWrite"
 ```
 
 ---
@@ -1096,4 +1096,4 @@ vercel --prod
 
 ---
 
-*Generated for NovelSpace Platform — Build with ❤️ using Next.js 15 + Supabase*
+*Generated for StoriWrite Platform — Build with ❤️ using Next.js 15 + Supabase*

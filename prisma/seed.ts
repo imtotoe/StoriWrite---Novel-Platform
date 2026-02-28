@@ -30,10 +30,10 @@ async function main() {
   console.log("Seeding admin user...");
   const adminPassword = await bcrypt.hash("admin1234", 10);
   await prisma.user.upsert({
-    where: { email: "admin@novelspace.com" },
+    where: { email: "admin@storiwrite.com" },
     update: {},
     create: {
-      email: "admin@novelspace.com",
+      email: "admin@storiwrite.com",
       username: "admin",
       displayName: "Admin",
       passwordHash: adminPassword,
