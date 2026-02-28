@@ -29,7 +29,7 @@ export function Footer() {
             <h4 className="mb-3 text-sm font-semibold">นักเขียน</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link href="/register" className="hover:text-foreground">เริ่มเขียน</Link></li>
-              <li><Link href="/writer/dashboard" className="hover:text-foreground">Writer Dashboard</Link></li>
+              <li><Link href="/writer/dashboard" className="hover:text-foreground">แดชบอร์ดนักเขียน</Link></li>
             </ul>
           </div>
 
@@ -44,7 +44,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t pt-4 text-center text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} NovelSpace. All rights reserved.
+          &copy; {new Date().getFullYear()} NovelSpace. สงวนลิขสิทธิ์ทุกประการ
         </div>
       </div>
     </footer>

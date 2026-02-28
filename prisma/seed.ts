@@ -50,6 +50,21 @@ async function main() {
       create: genre,
     });
   }
+  // Seed coin packs
+  console.log("Seeding coin packs...");
+  const coinPacks = [
+    { name: "Starter", price: 2900, coins: 30, bonusCoins: 0, sortOrder: 1, isFeatured: false },
+    { name: "Popular", price: 5900, coins: 65, bonusCoins: 5, sortOrder: 2, isFeatured: true },
+    { name: "Value", price: 11900, coins: 140, bonusCoins: 20, sortOrder: 3, isFeatured: false },
+    { name: "Premium", price: 29900, coins: 380, bonusCoins: 80, sortOrder: 4, isFeatured: false },
+  ];
+  for (const pack of coinPacks) {
+    const existing = await prisma.coinPack.findFirst({ where: { name: pack.name } });
+    if (!existing) {
+      await prisma.coinPack.create({ data: pack });
+    }
+  }
+
   console.log("Seed complete");
 }
 

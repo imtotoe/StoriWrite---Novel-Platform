@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { ChapterReader } from "@/components/reader/ChapterReader";
+import { ChapterLockedView } from "@/components/coin/ChapterLockedView";
 import type { Metadata } from "next";
 
 interface ChapterPageProps {
@@ -50,12 +51,40 @@ async function getChapterData(
       publishedAt: true,
       isPublished: true,
       novelId: true,
+      coinPrice: true,
     },
   });
 
   if (!chapter || chapter.novelId !== novel.id) return null;
   // Block non-owners from unpublished chapters
   if (!chapter.isPublished && !canViewUnpublished) return null;
+
+  // Check if chapter is locked (coin-gated) and if user has unlocked it
+  let isLocked = false;
+  let isUnlocked = false;
+  let userBalance = 0;
+
+  if (chapter.coinPrice && chapter.coinPrice > 0 && viewerUserId) {
+    // Owner and admin can always read
+    if (!isOwner && !isAdmin) {
+      const unlock = await prisma.coinSpend.findUnique({
+        where: { userId_chapterId: { userId: viewerUserId, chapterId } },
+      });
+      isUnlocked = !!unlock;
+      isLocked = !isUnlocked;
+
+      if (isLocked) {
+        const user = await prisma.user.findUnique({
+          where: { id: viewerUserId },
+          select: { coinBalance: true },
+        });
+        userBalance = user?.coinBalance ?? 0;
+      }
+    }
+  } else if (chapter.coinPrice && chapter.coinPrice > 0 && !viewerUserId) {
+    // Not logged in — chapter is locked
+    isLocked = true;
+  }
 
   // Filter visible chapters for navigation
   const visibleChapters = canViewUnpublished
@@ -67,7 +96,16 @@ async function getChapterData(
   const nextChapter =
     chapterIndex < visibleChapters.length - 1 ? visibleChapters[chapterIndex + 1] : null;
 
-  return { novel, chapter, prevChapter, nextChapter, canViewUnpublished };
+  return {
+    novel,
+    chapter,
+    prevChapter,
+    nextChapter,
+    canViewUnpublished,
+    isLocked,
+    isUnlocked,
+    userBalance,
+  };
 }
 
 export async function generateMetadata({ params }: ChapterPageProps): Promise<Metadata> {
@@ -89,6 +127,22 @@ export default async function ChapterPage({ params }: ChapterPageProps) {
     session?.user?.role
   );
   if (!data) notFound();
+
+  // If chapter is locked, show locked view instead of content
+  if (data.isLocked) {
+    return (
+      <ChapterLockedView
+        chapterId={data.chapter.id}
+        chapterTitle={data.chapter.title}
+        chapterNumber={data.chapter.chapterNumber}
+        coinPrice={data.chapter.coinPrice!}
+        novelSlug={data.novel.slug}
+        novelTitle={data.novel.title}
+        userBalance={data.userBalance}
+        isLoggedIn={!!session}
+      />
+    );
+  }
 
   // Increment view count only for published content (fire-and-forget)
   if (data.novel.isPublished && data.chapter.isPublished) {

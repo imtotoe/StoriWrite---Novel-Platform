@@ -4,8 +4,9 @@ import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookText, Eye, ThumbsUp, MessageSquare } from "lucide-react";
 import { QuickResumeBanner } from "@/components/writer/QuickResumeBanner";
+import { WriterRevenueCard } from "@/components/writer/WriterRevenueCard";
 
-export const metadata = { title: "Writer Dashboard" };
+export const metadata = { title: "แดชบอร์ดนักเขียน" };
 
 export default async function WriterDashboardPage() {
   const session = await auth();
@@ -34,7 +35,7 @@ export default async function WriterDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Writer Dashboard</h1>
+      <h1 className="text-2xl font-bold">แดชบอร์ดนักเขียน</h1>
 
       <QuickResumeBanner />
 
@@ -56,6 +57,8 @@ export default async function WriterDashboardPage() {
           );
         })}
       </div>
+
+      <WriterRevenueCard />
     </div>
   );
 }

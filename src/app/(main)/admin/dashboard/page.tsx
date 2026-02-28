@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, BookOpen, FileText, MessageCircle, Flag, AlertTriangle } from "lucide-react";
 
-export const metadata = { title: "Admin Dashboard" };
+export const metadata = { title: "ภาพรวมระบบ" };
 
 export default async function AdminDashboardPage() {
   const session = await auth();
@@ -27,7 +27,7 @@ export default async function AdminDashboardPage() {
     { label: "นักเขียน", value: writerCount, icon: Users, color: "text-purple-500" },
     { label: "นิยายทั้งหมด", value: novelCount, icon: BookOpen, color: "text-green-500" },
     { label: "นิยายเผยแพร่", value: publishedNovelCount, icon: BookOpen, color: "text-emerald-500" },
-    { label: "Chapters", value: chapterCount, icon: FileText, color: "text-orange-500" },
+    { label: "ตอนทั้งหมด", value: chapterCount, icon: FileText, color: "text-orange-500" },
     { label: "ความคิดเห็น", value: commentCount, icon: MessageCircle, color: "text-cyan-500" },
     { label: "รายงานทั้งหมด", value: reportCount, icon: Flag, color: "text-red-500" },
     { label: "รายงานรอดำเนินการ", value: pendingReports, icon: AlertTriangle, color: "text-yellow-500" },
@@ -35,7 +35,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Admin Dashboard</h1>
+      <h1 className="text-2xl font-bold">ภาพรวมระบบ</h1>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => (

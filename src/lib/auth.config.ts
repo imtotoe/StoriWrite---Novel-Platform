@@ -10,23 +10,10 @@ export const authConfig = {
       const isLoggedIn = !!auth?.user;
       const { pathname } = nextUrl;
 
-      // Writer routes
-      if (pathname.startsWith("/writer")) {
-        if (!isLoggedIn) return false;
-        if (auth.user.role === "READER") return Response.redirect(new URL("/", nextUrl));
-        return true;
-      }
-
-      // Admin routes
-      if (pathname.startsWith("/admin")) {
-        if (!isLoggedIn || auth.user.role !== "ADMIN") {
-          return Response.redirect(new URL("/", nextUrl));
-        }
-        return true;
-      }
-
-      // Auth-required routes
-      const authRequired = ["/library", "/notifications", "/settings"];
+      // Routes that require login (redirect to /login if not authenticated)
+      // Role-based authorization is handled in each page's server component
+      // via auth() + redirect(), not in middleware.
+      const authRequired = ["/writer", "/admin", "/library", "/notifications", "/settings"];
       if (authRequired.some((p) => pathname.startsWith(p))) {
         return isLoggedIn;
       }

@@ -38,6 +38,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { NotificationBell } from "@/components/community/NotificationBell";
+import { CoinBalance } from "@/components/coin/CoinBalance";
 
 const publicNav = [
   { href: "/", label: "หน้าแรก" },
@@ -159,6 +160,8 @@ export function Navbar() {
                 </Button>
               )}
 
+              <CoinBalance />
+
               <Button variant="ghost" size="icon" onClick={cycleTheme} className="h-8 w-8">
                 {theme === "dark" ? (
                   <Moon className="h-4 w-4" />
@@ -204,7 +207,7 @@ export function Navbar() {
                     <DropdownMenuItem asChild>
                       <Link href="/writer/dashboard">
                         <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Writer Dashboard
+                        แดชบอร์ดนักเขียน
                       </Link>
                     </DropdownMenuItem>
                   )}
@@ -212,7 +215,7 @@ export function Navbar() {
                     <DropdownMenuItem asChild>
                       <Link href="/admin/dashboard">
                         <Shield className="mr-2 h-4 w-4" />
-                        Admin
+                        จัดการระบบ
                       </Link>
                     </DropdownMenuItem>
                   )}
