@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight, List, Maximize2, Minimize2 } from "lucide-react";
+import { ChevronLeft, ChevronRight, List, Maximize2 } from "lucide-react";
 import { toast } from "sonner";
 import { ChapterContent } from "./ChapterContent";
 import { ReaderSettings, ReaderSettingsHandle } from "./ReaderSettings";
@@ -12,8 +12,8 @@ import { CommentSection } from "@/components/community/CommentSection";
 import { ReadingProgress } from "./ReadingProgress";
 import { ProgressBar } from "./ProgressBar";
 import { ReaderTopBar } from "./ReaderTopBar";
-import { ReaderOverlay } from "./ReaderOverlay";
 import { ChapterListSheet } from "./ChapterListSheet";
+import { MobileReaderSheet } from "./MobileReaderSheet";
 import { Separator } from "@/components/ui/separator";
 import { useReaderSettings } from "@/lib/useReaderSettings";
 import { cn } from "@/lib/utils";
@@ -87,9 +87,9 @@ export function ChapterReader({
   const router = useRouter();
   const theme = readingThemeStyles[readingTheme] || readingThemeStyles.default;
 
-  // --- Immersive mode state ---
+  // --- UI state ---
   const [controlsVisible, setControlsVisible] = useState(true);
-  const [overlayVisible, setOverlayVisible] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [chapterListOpen, setChapterListOpen] = useState(false);
   const settingsRef = useRef<ReaderSettingsHandle>(null);
@@ -132,19 +132,13 @@ export function ChapterReader({
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
-  // Tap on reading area → show overlay (immersive) or do nothing (normal)
-  const handleContentClick = useCallback(
-    (e: React.MouseEvent) => {
-      if (!immersiveMode) return;
-      const target = e.target as HTMLElement;
-      if (target.closest("a, button, [role=button]")) return;
-      setOverlayVisible(true);
-    },
-    [immersiveMode]
-  );
-
-  const dismissOverlay = useCallback(() => {
-    setOverlayVisible(false);
+  // Tap on reading area → open mobile sheet on small screens, nothing on desktop
+  const handleContentClick = useCallback((e: React.MouseEvent) => {
+    const target = e.target as HTMLElement;
+    if (target.closest("a, button, [role=button]")) return;
+    if (window.innerWidth < 768) {
+      setMobileSheetOpen(true);
+    }
   }, []);
 
   function cycleTheme() {
@@ -186,11 +180,9 @@ export function ChapterReader({
       if (Math.abs(dx) < 80 || Math.abs(dy) > 50) return;
 
       if (dx < 0 && nextChapter) {
-        // Swipe left → next chapter
         toast.info(`ตอนถัดไป → ตอนที่ ${nextChapter.chapterNumber}`);
         router.push(`/novel/${novelSlug}/${nextChapter.id}`);
       } else if (dx > 0 && prevChapter) {
-        // Swipe right → prev chapter
         toast.info(`← ตอนก่อนหน้า ตอนที่ ${prevChapter.chapterNumber}`);
         router.push(`/novel/${novelSlug}/${prevChapter.id}`);
       } else if (dx < 0 && !nextChapter) {
@@ -218,7 +210,7 @@ export function ChapterReader({
         <ReaderTopBar
           novelTitle={novelTitle}
           chapterNumber={chapter.chapterNumber}
-          visible={controlsVisible && !overlayVisible}
+          visible={controlsVisible && !mobileSheetOpen}
         />
       )}
 
@@ -315,24 +307,14 @@ export function ChapterReader({
       {/* Reading Progress Tracker */}
       <ReadingProgress chapterId={chapter.id} />
 
-      {/* Immersive overlay (tap to show) */}
-      {immersiveMode && (
-        <ReaderOverlay
-          visible={overlayVisible}
-          onDismiss={dismissOverlay}
-          onOpenSettings={openSettings}
-          onOpenChapterList={() => setChapterListOpen(true)}
-          onScrollToComments={scrollToComments}
-          onCycleTheme={cycleTheme}
-          currentTheme={readingTheme}
-          chapterNumber={chapter.chapterNumber}
-          novelSlug={novelSlug}
-          prevChapter={prevChapter}
-          nextChapter={nextChapter}
-        />
-      )}
+      {/* Mobile bottom sheet */}
+      <MobileReaderSheet
+        open={mobileSheetOpen}
+        onOpenChange={setMobileSheetOpen}
+        onOpenChapterList={() => setChapterListOpen(true)}
+      />
 
-      {/* Chapter list sheet (for overlay) */}
+      {/* Chapter list sheet */}
       {allChapters && allChapters.length > 0 && (
         <ChapterListSheet
           chapters={allChapters}

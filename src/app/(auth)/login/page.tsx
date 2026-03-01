@@ -21,11 +21,39 @@ import { toast } from "sonner";
 
 export default function LoginPage() {
   return (
-    <Suspense>
-      <LoginForm />
-    </Suspense>
+    <div className="flex min-h-screen">
+      {/* Branded left panel — desktop only */}
+      <div
+        className="hidden md:flex md:w-1/2 flex-col items-center justify-center p-12 text-white"
+        style={{ background: "radial-gradient(ellipse at bottom left, hsl(35,80%,40%) 0%, hsl(220,60%,25%) 100%)" }}
+      >
+        <div className="max-w-sm text-center">
+          <div className="mb-6 text-6xl">📖</div>
+          <h2 className="text-3xl font-bold tracking-tight">StoriWrite</h2>
+          <p className="mt-3 text-lg opacity-80">แพลตฟอร์มอ่านและเขียนนิยายออนไลน์</p>
+          <blockquote className="mt-8 border-l-2 border-white/40 pl-4 text-left text-sm opacity-70 italic">
+            &ldquo;เรื่องราวที่ดีเริ่มต้นจากนักเขียนที่กล้าเล่า&rdquo;
+          </blockquote>
+          <div className="mt-8 flex flex-col gap-2 text-sm opacity-60">
+            <span>✦ นิยายหลากหลายแนว</span>
+            <span>✦ อัพเดตทุกวัน</span>
+            <span>✦ ฟรีเข้าอ่านได้เลย</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Right panel — form */}
+      <div className="flex flex-1 items-center justify-center p-6">
+        <div className="w-full max-w-sm">
+          <Suspense>
+            <LoginForm />
+          </Suspense>
+        </div>
+      </div>
+    </div>
   );
 }
+
 
 function LoginForm() {
   const router = useRouter();

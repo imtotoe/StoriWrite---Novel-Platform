@@ -17,7 +17,6 @@ import {
   Shield,
   Sun,
   Moon,
-  Monitor,
 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
@@ -55,10 +54,8 @@ export function Navbar() {
   const isWriter = user?.role === "WRITER" || user?.role === "ADMIN";
   const isAdmin = user?.role === "ADMIN";
 
-  const cycleTheme = () => {
-    if (theme === "light") setTheme("dark");
-    else if (theme === "dark") setTheme("system");
-    else setTheme("light");
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   return (
@@ -124,9 +121,9 @@ export function Navbar() {
               key={item.href}
               href={item.href}
               className={cn(
-                "rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent",
+                "relative rounded-md px-3 py-2 text-sm font-medium transition-colors hover:bg-accent",
                 pathname === item.href
-                  ? "bg-accent text-accent-foreground"
+                  ? "text-foreground after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-primary after:content-['']"
                   : "text-muted-foreground"
               )}
             >
@@ -162,13 +159,11 @@ export function Navbar() {
 
               <CoinBalance />
 
-              <Button variant="ghost" size="icon" onClick={cycleTheme} className="h-8 w-8">
+              <Button variant="ghost" size="icon" onClick={toggleTheme} className="h-8 w-8" title={theme === "dark" ? "โหมดสว่าง" : "โหมดมืด"}>
                 {theme === "dark" ? (
-                  <Moon className="h-4 w-4" />
-                ) : theme === "light" ? (
                   <Sun className="h-4 w-4" />
                 ) : (
-                  <Monitor className="h-4 w-4" />
+                  <Moon className="h-4 w-4" />
                 )}
               </Button>
 

@@ -101,8 +101,12 @@ export default async function HomePage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 space-y-10">
       {/* Hero */}
-      <section className="overflow-hidden rounded-2xl bg-gradient-to-br from-primary/10 via-background to-primary/5 px-6 py-12 md:px-12 md:py-16">
-        <div className="max-w-2xl">
+      <section className="relative overflow-hidden rounded-2xl px-6 py-12 md:px-12 md:py-16" style={{ background: "radial-gradient(ellipse at 0% 100%, hsl(35,80%,55%,0.18) 0%, transparent 60%), radial-gradient(ellipse at 100% 0%, hsl(220,70%,60%,0.12) 0%, transparent 60%), hsl(var(--muted))" }}>
+        {/* Decorative book emoji */}
+        <div className="pointer-events-none absolute right-6 top-1/2 -translate-y-1/2 select-none text-[120px] opacity-10 md:right-12 md:text-[180px]" aria-hidden="true">
+          📖
+        </div>
+        <div className="relative max-w-2xl">
           <h1 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
             ค้นพบโลกแห่งนิยาย
           </h1>
@@ -123,8 +127,24 @@ export default async function HomePage() {
               </Link>
             </Button>
           </div>
+          {/* Social proof stats */}
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-green-500" />
+              นิยายหลากหลายแนว
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-500" />
+              อัพเดตทุกวัน
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-amber-500" />
+              ฟรีเข้าอ่านได้เลย
+            </span>
+          </div>
         </div>
       </section>
+
 
       {/* Reading Resume */}
       <ReadingResumeBanner />

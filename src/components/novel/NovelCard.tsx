@@ -1,6 +1,18 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-import { BookOpen, Eye, Heart } from "lucide-react";
+import { Eye, Heart, BookOpen } from "lucide-react";
+
+// Deterministic gradient from title string
+function getTitleGradient(title: string): string {
+  let hash = 0;
+  for (let i = 0; i < title.length; i++) {
+    hash = (hash << 5) - hash + title.charCodeAt(i);
+    hash |= 0;
+  }
+  const hue = Math.abs(hash) % 360;
+  const hue2 = (hue + 40) % 360;
+  return `linear-gradient(135deg, hsl(${hue}, 55%, 45%) 0%, hsl(${hue2}, 60%, 30%) 100%)`;
+}
 
 interface NovelCardProps {
   novel: {
@@ -46,7 +58,7 @@ export function NovelCard({ novel, compact }: NovelCardProps) {
         href={`/novel/${novel.slug}`}
         className="flex gap-3 rounded-lg border p-3 transition-colors hover:bg-accent"
       >
-        <div className="h-20 w-14 shrink-0 overflow-hidden rounded bg-muted">
+        <div className="h-20 w-14 shrink-0 overflow-hidden rounded">
           {novel.cover ? (
             <img
               src={novel.cover}
@@ -54,8 +66,13 @@ export function NovelCard({ novel, compact }: NovelCardProps) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full items-center justify-center">
-              <BookOpen className="h-5 w-5 text-muted-foreground" />
+            <div
+              className="flex h-full w-full items-center justify-center"
+              style={{ background: getTitleGradient(novel.title) }}
+            >
+              <span className="text-xl font-bold text-white drop-shadow">
+                {novel.title[0]?.toUpperCase()}
+              </span>
             </div>
           )}
         </div>
@@ -86,9 +103,9 @@ export function NovelCard({ novel, compact }: NovelCardProps) {
   return (
     <Link
       href={`/novel/${novel.slug}`}
-      className="group flex flex-col overflow-hidden rounded-lg border transition-colors hover:border-primary/50"
+      className="group flex flex-col overflow-hidden rounded-lg border transition-all hover:border-primary/50 hover:-translate-y-1 hover:shadow-lg duration-200"
     >
-      <div className="aspect-[2/3] w-full overflow-hidden bg-muted">
+      <div className="aspect-[2/3] w-full overflow-hidden">
         {novel.cover ? (
           <img
             src={novel.cover}
@@ -96,8 +113,13 @@ export function NovelCard({ novel, compact }: NovelCardProps) {
             className="h-full w-full object-cover transition-transform group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full items-center justify-center">
-            <BookOpen className="h-10 w-10 text-muted-foreground" />
+          <div
+            className="flex h-full w-full items-center justify-center"
+            style={{ background: getTitleGradient(novel.title) }}
+          >
+            <span className="text-4xl font-bold text-white drop-shadow-lg">
+              {novel.title[0]?.toUpperCase()}
+            </span>
           </div>
         )}
       </div>

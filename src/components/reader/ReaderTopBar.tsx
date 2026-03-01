@@ -1,8 +1,11 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface ReaderTopBarProps {
   novelTitle: string;
@@ -11,6 +14,20 @@ interface ReaderTopBarProps {
 }
 
 export function ReaderTopBar({ novelTitle, chapterNumber, visible }: ReaderTopBarProps) {
+  const [scrollPct, setScrollPct] = useState(0);
+  const { data: session } = useSession();
+  const user = session?.user;
+
+  useEffect(() => {
+    function onScroll() {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      setScrollPct(Math.min(100, Math.round((window.scrollY / docHeight) * 100)));
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div
       className={cn(
@@ -28,14 +45,32 @@ export function ReaderTopBar({ novelTitle, chapterNumber, visible }: ReaderTopBa
             <span className="text-sm font-bold hidden sm:inline">StoriWrite</span>
           </Link>
 
-          {/* Chapter info */}
+          {/* Chapter info + scroll % */}
           <div className="flex-1 mx-4 text-center min-w-0">
             <p className="truncate text-xs text-muted-foreground">{novelTitle}</p>
-            <p className="truncate text-xs font-medium">ตอนที่ {chapterNumber}</p>
+            <p className="truncate text-xs font-medium">
+              ตอนที่ {chapterNumber}
+              <span className="ml-2 text-[10px] text-muted-foreground tabular-nums">
+                {scrollPct}%
+              </span>
+            </p>
           </div>
 
-          {/* Spacer to balance layout */}
-          <div className="w-8" />
+          {/* User avatar or login link */}
+          {user ? (
+            <Link href={`/author/${user.username}`} className="shrink-0">
+              <Avatar className="h-7 w-7">
+                <AvatarImage src={user.image ?? undefined} />
+                <AvatarFallback className="text-xs">
+                  {(user.name ?? user.username ?? "U")[0].toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+            </Link>
+          ) : (
+            <Link href="/login" className="text-xs text-muted-foreground hover:text-foreground">
+              เข้าสู่ระบบ
+            </Link>
+          )}
         </div>
       </div>
     </div>

@@ -12,7 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, X, ImagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { uploadCover } from "@/lib/supabase";
 
 interface Genre {
   id: string;
@@ -82,12 +81,17 @@ export function NovelForm({ novel, genres, userId }: NovelFormProps) {
     const localUrl = URL.createObjectURL(file);
     setCoverPreview(localUrl);
 
-    // Upload to Supabase
+    // Upload via API route (uses service role key, bypasses RLS)
     setUploadingCover(true);
     try {
       const novelId = novel?.id || "temp-" + Date.now();
-      const url = await uploadCover(file, userId, novelId);
-      setCoverUrl(url);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("novelId", novelId);
+      const res = await fetch("/api/upload/cover", { method: "POST", body: formData });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error || "Upload failed");
+      setCoverUrl(result.url);
       toast.success("อัพโหลดปกสำเร็จ");
     } catch {
       toast.error("อัพโหลดปกล้มเหลว");
