@@ -139,6 +139,13 @@
   color: #A89B8C;
 }
 
+/* While a reading theme is active: force Navbar/Footer to be fully opaque
+   so the colored body background doesn't bleed through the backdrop-blur transparency */
+body[data-reading-theme] header {
+  background-color: hsl(var(--background)) !important;
+  backdrop-filter: none !important;
+}
+
 /* Paragraph spacing for reader */
 .ProseMirror p + p {
   margin-top: var(--paragraph-spacing, 0.8rem);

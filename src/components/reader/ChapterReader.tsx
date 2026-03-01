@@ -87,6 +87,28 @@ export function ChapterReader({
   const router = useRouter();
   const theme = readingThemeStyles[readingTheme] || readingThemeStyles.default;
 
+  // Apply reading theme background to body — scoped to this page mount only
+  useEffect(() => {
+    const bgMap: Record<string, string> = {
+      sepia: "#F5EFDC",
+      dark: "#1E1E1E",
+      night: "#0A0A0A",
+    };
+    const bg = bgMap[readingTheme] ?? "";
+    if (bg) {
+      document.body.style.backgroundColor = bg;
+      document.body.setAttribute("data-reading-theme", readingTheme);
+    } else {
+      document.body.style.backgroundColor = "";
+      document.body.removeAttribute("data-reading-theme");
+    }
+    return () => {
+      // Restore when leaving the reading page
+      document.body.style.backgroundColor = "";
+      document.body.removeAttribute("data-reading-theme");
+    };
+  }, [readingTheme]);
+
   // --- UI state ---
   const [controlsVisible, setControlsVisible] = useState(true);
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
@@ -246,13 +268,9 @@ export function ChapterReader({
         </div>
       )}
 
-      {/* Reading Area */}
+      {/* Reading Area — theme bg applied via body; text color scoped here */}
       <div
-        className={cn(
-          "min-h-screen transition-colors duration-300",
-          theme.bg,
-          theme.text
-        )}
+        className={cn("min-h-screen transition-colors duration-300", theme.text)}
         style={{ filter: `brightness(${brightness}%)` }}
         onClick={handleContentClick}
       >
