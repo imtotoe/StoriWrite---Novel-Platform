@@ -23,15 +23,15 @@ const themeOptions: {
   border: string;
   check: string;
 }[] = [
-  { value: "default", label: "ปกติ",  bg: "bg-white",       border: "border-gray-300", check: "text-gray-700" },
-  { value: "sepia",   label: "ซีเปีย", bg: "bg-[#F5EFDC]",  border: "border-[#C5A97D]", check: "text-[#5C4B3E]" },
-  { value: "dark",    label: "มืด",   bg: "bg-[#1E1E1E]",  border: "border-[#555]",    check: "text-white"    },
-];
+    { value: "default", label: "ปกติ", bg: "bg-white", border: "border-gray-300", check: "text-gray-700" },
+    { value: "sepia", label: "ซีเปีย", bg: "bg-[#F5EFDC]", border: "border-[#C5A97D]", check: "text-[#5C4B3E]" },
+    { value: "dark", label: "มืด", bg: "bg-[#1E1E1E]", border: "border-[#555]", check: "text-white" },
+  ];
 
 const fontOptions: { value: FontFamily; label: string; className: string }[] = [
-  { value: "sans",    label: "Sans",    className: "font-sans"       },
-  { value: "sarabun", label: "Sarabun", className: "font-[Sarabun]"  },
-  { value: "serif",   label: "Serif",   className: "font-serif"      },
+  { value: "sans", label: "Sans", className: "font-sans" },
+  { value: "sarabun", label: "Sarabun", className: "font-[Sarabun]" },
+  { value: "serif", label: "Serif", className: "font-serif" },
 ];
 
 export function MobileReaderSheet({
@@ -57,7 +57,7 @@ export function MobileReaderSheet({
   }
 
   const currentTheme = themeOptions.find((t) => t.value === readingTheme) ?? themeOptions[0];
-  const currentFont  = fontOptions.find((f) => f.value === fontFamily)    ?? fontOptions[0];
+  const currentFont = fontOptions.find((f) => f.value === fontFamily) ?? fontOptions[0];
 
   return (
     <Sheet open={open} onOpenChange={handleClose}>
@@ -120,23 +120,7 @@ export function MobileReaderSheet({
         {/* ─── Sub-menu: Font ─── */}
         {subMenu === "font" && (
           <div className="border-t px-5 py-3 space-y-3">
-            {/* Font-size stepper inside font sub-menu */}
-            <div className="flex items-center gap-3">
-              <span className="text-xs text-muted-foreground shrink-0">ขนาด</span>
-              <Slider
-                value={[fontSize]}
-                onValueChange={([v]) => setFontSize(v)}
-                min={12}
-                max={32}
-                step={1}
-                className="flex-1"
-              />
-              <span className="w-7 text-right text-xs tabular-nums text-muted-foreground">
-                {fontSize}px
-              </span>
-            </div>
-
-            {/* Font-family cards */}
+            {/* Font-family cards only — font size already in Row 1 */}
             <div className="grid grid-cols-3 gap-2">
               {fontOptions.map((f) => (
                 <button

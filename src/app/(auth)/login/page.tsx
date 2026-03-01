@@ -23,11 +23,13 @@ export default function LoginPage() {
         }}
       >
         <div className="max-w-sm text-center">
-          <div className="mb-6 text-7xl select-none">📖</div>
-          <div className="flex items-center justify-center gap-2 text-2xl font-bold">
+          <Link href="/" className="inline-block">
+            <div className="mb-6 text-7xl select-none">📖</div>
+          </Link>
+          <Link href="/" className="inline-flex items-center justify-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity">
             <BookOpen className="h-6 w-6" />
             StoriWrite
-          </div>
+          </Link>
           <p className="mt-3 text-lg opacity-80">แพลตฟอร์มอ่านและเขียนนิยายออนไลน์</p>
           <blockquote className="mt-8 border-l-2 border-white/40 pl-4 text-left text-sm opacity-70 italic leading-relaxed">
             &ldquo;เรื่องราวที่ดีเริ่มต้นจากนักเขียนที่กล้าเล่า&rdquo;
@@ -65,6 +67,9 @@ export default function LoginPage() {
             <Link href="/register" className="font-medium text-primary hover:underline">
               สมัครสมาชิก
             </Link>
+          </p>
+          <p className="text-center text-xs text-muted-foreground">
+            <Link href="/" className="hover:underline">← กลับหน้าหลัก</Link>
           </p>
         </div>
       </div>

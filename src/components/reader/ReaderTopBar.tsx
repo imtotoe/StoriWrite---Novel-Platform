@@ -2,18 +2,27 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Settings, Minimize2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 
 interface ReaderTopBarProps {
   novelTitle: string;
   chapterNumber: number;
   visible: boolean;
+  onOpenSettings?: () => void;
+  onExitImmersive?: () => void;
 }
 
-export function ReaderTopBar({ novelTitle, chapterNumber, visible }: ReaderTopBarProps) {
+export function ReaderTopBar({
+  novelTitle,
+  chapterNumber,
+  visible,
+  onOpenSettings,
+  onExitImmersive,
+}: ReaderTopBarProps) {
   const [scrollPct, setScrollPct] = useState(0);
   const { data: session } = useSession();
   const user = session?.user;
@@ -38,15 +47,15 @@ export function ReaderTopBar({ novelTitle, chapterNumber, visible }: ReaderTopBa
       )}
     >
       <div className="bg-background/90 backdrop-blur-sm border-b">
-        <div className="mx-auto flex h-12 max-w-3xl items-center justify-between px-4">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-1.5 text-primary">
+        <div className="mx-auto flex h-12 max-w-3xl items-center px-4 gap-2">
+          {/* Logo — links home */}
+          <Link href="/" className="flex items-center gap-1.5 text-primary shrink-0">
             <BookOpen className="h-5 w-5" />
             <span className="text-sm font-bold hidden sm:inline">StoriWrite</span>
           </Link>
 
           {/* Chapter info + scroll % */}
-          <div className="flex-1 mx-4 text-center min-w-0">
+          <div className="flex-1 mx-3 text-center min-w-0">
             <p className="truncate text-xs text-muted-foreground">{novelTitle}</p>
             <p className="truncate text-xs font-medium">
               ตอนที่ {chapterNumber}
@@ -56,21 +65,48 @@ export function ReaderTopBar({ novelTitle, chapterNumber, visible }: ReaderTopBa
             </p>
           </div>
 
-          {/* User avatar or login link */}
-          {user ? (
-            <Link href={`/author/${user.username}`} className="shrink-0">
-              <Avatar className="h-7 w-7">
-                <AvatarImage src={user.image ?? undefined} />
-                <AvatarFallback className="text-xs">
-                  {(user.name ?? user.username ?? "U")[0].toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
-            </Link>
-          ) : (
-            <Link href="/login" className="text-xs text-muted-foreground hover:text-foreground">
-              เข้าสู่ระบบ
-            </Link>
-          )}
+          {/* Right controls */}
+          <div className="flex items-center gap-1 shrink-0">
+            {/* Settings */}
+            {onOpenSettings && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={onOpenSettings}
+                title="ตั้งค่าการอ่าน"
+              >
+                <Settings className="h-4 w-4" />
+              </Button>
+            )}
+            {/* Exit immersive */}
+            {onExitImmersive && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8"
+                onClick={onExitImmersive}
+                title="ออกจากโหมดเต็มจอ"
+              >
+                <Minimize2 className="h-4 w-4" />
+              </Button>
+            )}
+            {/* User avatar or login link */}
+            {user ? (
+              <Link href={`/author/${user.username}`} className="ml-1">
+                <Avatar className="h-7 w-7">
+                  <AvatarImage src={user.image ?? undefined} />
+                  <AvatarFallback className="text-xs">
+                    {(user.name ?? user.username ?? "U")[0].toUpperCase()}
+                  </AvatarFallback>
+                </Avatar>
+              </Link>
+            ) : (
+              <Link href="/login" className="text-xs text-muted-foreground hover:text-foreground px-1">
+                เข้าสู่ระบบ
+              </Link>
+            )}
+          </div>
         </div>
       </div>
     </div>

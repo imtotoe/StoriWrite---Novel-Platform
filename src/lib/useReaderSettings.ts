@@ -37,7 +37,7 @@ const defaults = {
   readingTheme: "default" as ReadingTheme,
   blueLightFilter: 0,
   brightness: 100,
-  immersiveMode: true,
+  immersiveMode: false,
 };
 
 export const useReaderSettings = create<ReaderSettingsState>()(

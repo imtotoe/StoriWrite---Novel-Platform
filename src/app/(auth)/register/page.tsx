@@ -79,11 +79,13 @@ export default function RegisterPage() {
         }}
       >
         <div className="max-w-xs text-center">
-          <div className="mb-5 text-6xl select-none">✍️</div>
-          <div className="flex items-center justify-center gap-2 text-2xl font-bold">
+          <Link href="/" className="inline-block">
+            <div className="mb-5 text-6xl select-none">✍️</div>
+          </Link>
+          <Link href="/" className="inline-flex items-center justify-center gap-2 text-2xl font-bold hover:opacity-80 transition-opacity">
             <BookOpen className="h-5 w-5" />
             StoriWrite
-          </div>
+          </Link>
           <p className="mt-2 text-base opacity-80">เข้าร่วมชุมชนนักเขียนและนักอ่าน</p>
           <div className="mt-8 flex flex-col gap-3 text-sm text-left">
             <div className="flex items-start gap-3 rounded-xl bg-white/10 px-4 py-3">
@@ -207,11 +209,14 @@ export default function RegisterPage() {
             </Button>
           </form>
 
-          <p className="mt-6 text-center text-sm text-muted-foreground">
+          <p className="mt-4 text-center text-sm text-muted-foreground">
             มีบัญชีอยู่แล้ว?{" "}
             <Link href="/login" className="font-medium text-primary hover:underline">
               เข้าสู่ระบบ
             </Link>
+          </p>
+          <p className="mt-2 text-center text-xs text-muted-foreground">
+            <Link href="/" className="hover:underline">← กลับหน้าหลัก</Link>
           </p>
         </div>
       </div>
